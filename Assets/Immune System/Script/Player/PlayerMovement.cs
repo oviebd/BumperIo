@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
 	
 	private void FixedUpdate()
     {
-		//MovePlayer();
+		MovePlayer();
 		if(_canRotate == true || Utils.IsItMobilePlatform() == false)
 		{
 			float angle = (Mathf.Atan2(_rotationMovement.x, _rotationMovement.y) * Mathf.Rad2Deg);
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
     {
 		float threshHold = 0.3f;
 	//	Vector2 newPos = _rb.position + _positionMovement * _moveSpeed * Time.fixedDeltaTime;
-		Vector2 newPos = _rb.position + transform.forward * _moveSpeed * Time.fixedDeltaTime;
+		Vector2 newPos = new Vector2( _rb.position.x,_rb.position.z) + _rotationMovement * _moveSpeed * Time.fixedDeltaTime;
 
 		/*	if (newPos.y > (BoundaryController.instance.GetTopWallPosition().y - threshHold))
 				newPos.y = BoundaryController.instance.GetTopWallPosition().y - threshHold;
