@@ -7,12 +7,12 @@ public static class Utils
     public static bool IsItMobilePlatform()
     {
         bool isItMobilePlatform = false;
-
-        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+		return true;
+      /*  if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
         {
             isItMobilePlatform = true;
         }
-        return isItMobilePlatform;
+        return isItMobilePlatform;*/
     }
 /*
     public static IMove[]  GetAllIMoveComponentsFromAGameObject( GameObject gameObj)

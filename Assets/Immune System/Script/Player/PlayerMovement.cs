@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private Rigidbody _rb;
     [SerializeField] private float _moveSpeed = 5.0f;
 
     private Vector2 _rotationMovement,_positionMovement;
@@ -36,33 +36,35 @@ public class PlayerMovement : MonoBehaviour
 	void Update()
     {
 		_rotationMovement = InputManager.instance.GetPlayerRotationVector2();
-		_positionMovement = InputManager.instance.GetPlayerMovementVector2();
+		//_positionMovement = InputManager.instance.GetPlayerMovementVector2();
 	}
 	
 	private void FixedUpdate()
     {
-		MovePlayer();
+		//MovePlayer();
 		if(_canRotate == true || Utils.IsItMobilePlatform() == false)
 		{
 			float angle = (Mathf.Atan2(_rotationMovement.x, _rotationMovement.y) * Mathf.Rad2Deg);
-			angle = flipRot ? -angle : angle;
-			_rb.MoveRotation(angle);
+			//angle = flipRot ? -angle : angle;
+			Quaternion rotation = Quaternion.Euler(0, angle, 0);
+			_rb.MoveRotation(rotation);
 		}
 	}
 
     void MovePlayer()
     {
 		float threshHold = 0.3f;
-		Vector2 newPos = _rb.position + _positionMovement * _moveSpeed * Time.fixedDeltaTime;
+	//	Vector2 newPos = _rb.position + _positionMovement * _moveSpeed * Time.fixedDeltaTime;
+		Vector2 newPos = _rb.position + transform.forward * _moveSpeed * Time.fixedDeltaTime;
 
-	/*	if (newPos.y > (BoundaryController.instance.GetTopWallPosition().y - threshHold))
-			newPos.y = BoundaryController.instance.GetTopWallPosition().y - threshHold;
-		if (newPos.y < (BoundaryController.instance.GetBottomWallPosition().y + threshHold))
-			newPos.y = BoundaryController.instance.GetBottomWallPosition().y + threshHold;
-		if (newPos.x > (BoundaryController.instance.GetRightWallPosition().x - threshHold))
-			newPos.x = BoundaryController.instance.GetRightWallPosition().x - threshHold;
-		if (newPos.x < (BoundaryController.instance.GetLeftWallPosition().x + threshHold))
-			newPos.x = BoundaryController.instance.GetLeftWallPosition().x + threshHold;*/
+		/*	if (newPos.y > (BoundaryController.instance.GetTopWallPosition().y - threshHold))
+				newPos.y = BoundaryController.instance.GetTopWallPosition().y - threshHold;
+			if (newPos.y < (BoundaryController.instance.GetBottomWallPosition().y + threshHold))
+				newPos.y = BoundaryController.instance.GetBottomWallPosition().y + threshHold;
+			if (newPos.x > (BoundaryController.instance.GetRightWallPosition().x - threshHold))
+				newPos.x = BoundaryController.instance.GetRightWallPosition().x - threshHold;
+			if (newPos.x < (BoundaryController.instance.GetLeftWallPosition().x + threshHold))
+				newPos.x = BoundaryController.instance.GetLeftWallPosition().x + threshHold;*/
 
 		_rb.MovePosition(newPos);
 	}

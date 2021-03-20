@@ -19,10 +19,12 @@ public class InputManager : MonoBehaviour
     public Vector2 GetPlayerRotationVector2()
     {
 		Vector2 rotationMovement = Vector2.zero;
+		//rotationMovement = new Vector2(_rightJoystickForPlayerRotation.Horizontal, _rightJoystickForPlayerRotation.Vertical);
 		if (Utils.IsItMobilePlatform())
             rotationMovement = new Vector2(_rightJoystickForPlayerRotation.Horizontal, _rightJoystickForPlayerRotation.Vertical);
         else
             rotationMovement = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+
 		return rotationMovement;
     }
 
