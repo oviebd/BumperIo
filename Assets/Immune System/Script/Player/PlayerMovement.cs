@@ -12,10 +12,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody _rb;
     [SerializeField] private float _moveSpeed = 5.0f;
 
-    private Vector2 _rotationMovement,_positionMovement;
+    private Vector3 _moveDirection;
+	private Vector3 _prevMoveDirection;
 	private bool _canRotate = false;
-	private bool flipRot = true;
 
+	Quaternion _prevRotation = Quaternion.LookRotation(Vector3.zero, Vector3.up);
 	private void Start()
 	{
 		if (Utils.IsItMobilePlatform() == true)
@@ -35,38 +36,43 @@ public class PlayerMovement : MonoBehaviour
 	}
 	void Update()
     {
-		_rotationMovement = InputManager.instance.GetPlayerRotationVector2();
-		//_positionMovement = InputManager.instance.GetPlayerMovementVector2();
+		_moveDirection = InputManager.instance.GetPlayerMovementAxisValue();
+		_moveDirection.Normalize();
 	}
 	
 	private void FixedUpdate()
     {
 		MovePlayer();
-		if(_canRotate == true || Utils.IsItMobilePlatform() == false)
+		if(_canRotate == true)
 		{
-			float angle = (Mathf.Atan2(_rotationMovement.x, _rotationMovement.y) * Mathf.Rad2Deg);
+			if (_moveDirection != Vector3.zero)
+			{
+				
+				Quaternion rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
+				_rb.MoveRotation(rotation);
+				_prevRotation = rotation;
+			}
+
+			/*float angle = (Mathf.Atan2(_rotationMovement.x, _rotationMovement.y) * Mathf.Rad2Deg);
 			//angle = flipRot ? -angle : angle;
 			Quaternion rotation = Quaternion.Euler(0, angle, 0);
-			_rb.MoveRotation(rotation);
+			_rb.MoveRotation(rotation);*/
+		}
+		else
+		{
+			_rb.MoveRotation(_prevRotation);
 		}
 	}
 
     void MovePlayer()
     {
-		float threshHold = 0.3f;
-	//	Vector2 newPos = _rb.position + _positionMovement * _moveSpeed * Time.fixedDeltaTime;
-		Vector2 newPos = new Vector2( _rb.position.x,_rb.position.z) + _rotationMovement * _moveSpeed * Time.fixedDeltaTime;
-
-		/*	if (newPos.y > (BoundaryController.instance.GetTopWallPosition().y - threshHold))
-				newPos.y = BoundaryController.instance.GetTopWallPosition().y - threshHold;
-			if (newPos.y < (BoundaryController.instance.GetBottomWallPosition().y + threshHold))
-				newPos.y = BoundaryController.instance.GetBottomWallPosition().y + threshHold;
-			if (newPos.x > (BoundaryController.instance.GetRightWallPosition().x - threshHold))
-				newPos.x = BoundaryController.instance.GetRightWallPosition().x - threshHold;
-			if (newPos.x < (BoundaryController.instance.GetLeftWallPosition().x + threshHold))
-				newPos.x = BoundaryController.instance.GetLeftWallPosition().x + threshHold;*/
-
-		_rb.MovePosition(newPos);
+		if (_moveDirection != Vector3.zero)
+		{
+			_prevMoveDirection = _moveDirection;
+			_rb.MovePosition(transform.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
+		}
+		else
+			_rb.MovePosition(transform.position + _prevMoveDirection * _moveSpeed * Time.fixedDeltaTime);
 	}
 
 	void onBeginDrag()

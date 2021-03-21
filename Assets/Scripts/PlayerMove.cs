@@ -19,9 +19,9 @@ public class PlayerMove : MonoBehaviour
 
 	void Update()
 	{
-		_horizontalValue = Input.GetAxis("Horizontal");
-		_verticalValue = Input.GetAxis("Vertical");
-	     Debug.Log("Vertical Value " + _verticalValue + "  hor val "  + _horizontalValue);
+		_horizontalValue = Input.GetAxisRaw("Horizontal");
+		_verticalValue = Input.GetAxisRaw("Vertical");
+	   //  Debug.Log("Vertical Value " + _verticalValue + "  hor val "  + _horizontalValue);
 	   
 	}
 
@@ -29,21 +29,24 @@ public class PlayerMove : MonoBehaviour
 	{
 		inputData = new Vector2(_horizontalValue, _verticalValue);
 		_moveDirection = new Vector3(_horizontalValue, 0, _verticalValue);
-		_moveDirection.Normalize();
+		//_moveDirection.Normalize();
 
 		if(_moveDirection != Vector3.zero)
+		//if(_horizontalValue !=0 && _verticalValue != 0)
 		{
 			//Debug.Log("Move Direction - " + _moveDirection);
 			_rb.MovePosition(transform.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
 			Quaternion rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
 			_rb.MoveRotation(rotation);
+			Debug.Log("Rotation - " + rotation);
 			_previousDirection = _moveDirection;
 			_prevRotation = rotation;
 		}
 		else
 		{
+			Debug.Log( "Prev rot - " + _prevRotation);
 			//Debug.Log("Move Direction "  +  _moveDirection +"Prev Direction - " + _previousDirection);
-			_rb.MovePosition(transform.position + _previousDirection * _moveSpeed * Time.fixedDeltaTime);
+			//_rb.MovePosition(transform.position + _previousDirection * _moveSpeed * Time.fixedDeltaTime);
 			_rb.MoveRotation(_prevRotation);
 		}
 	}
