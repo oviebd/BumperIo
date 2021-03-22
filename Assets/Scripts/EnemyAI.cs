@@ -4,61 +4,87 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+	public LayerMask layer;
 	[SerializeField] private float _moveSpeed = 5.0f;
-	[SerializeField] private float _rotationSpeed = 500.0f;
+	[SerializeField] private float _rotationSpeed = 10.0f;
 
 	private Vector3 _moveDirection;
-	private Vector3 _previousDirection = Vector3.zero;
-
-	Vector2 inputData;
-	float _horizontalValue, _verticalValue;
-
-	void Update()
+	[SerializeField] private Rigidbody _rb;
+	
+	private void Start()
 	{
-		_horizontalValue = Input.GetAxis("Horizontal");
-		_verticalValue = Input.GetAxis("Vertical");
-		// Debug.Log("Vertical Value " + _verticalValue);
-		inputData = new Vector2(_horizontalValue, _verticalValue);
-		_moveDirection = new Vector3(_horizontalValue, 0, _verticalValue);
-		_moveDirection.Normalize();
+		_rb = GetComponent<Rigidbody>();
+	}
 
-
-		if (_moveDirection != Vector3.zero)
+	private void Update()
+	{
+		CheckRayCast();
+		if (Input.GetKeyDown(KeyCode.R))
 		{
-			Debug.Log("Move Direction - " + _moveDirection);
-			transform.Translate(_moveDirection * _moveSpeed * Time.deltaTime, Space.World);
-			Quaternion rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
-			transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
-			_previousDirection = _moveDirection;
+			MoveRight();
 		}
-		else
+		if (Input.GetKeyDown(KeyCode.L))
 		{
-			transform.Translate(_previousDirection * _moveSpeed * Time.deltaTime, Space.World);
+			MoveLeft();
 		}
-
+		if (Input.GetKeyDown(KeyCode.B))
+			MoveDown();
+		if (Input.GetKeyDown(KeyCode.T))
+			MoveUp();
 	}
 
 	private void FixedUpdate()
 	{
+		MovePlayer();
 	}
 
-	private void MoveRorward()
+	void MovePlayer()
 	{
-
+		if (_moveDirection != Vector3.zero)
+		{
+			_rb.MovePosition(transform.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
+			Quaternion rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
+			_rb.MoveRotation(rotation);
+		}
 	}
 
-	private void MoveBackWard()
-	{
-
-	}
 
 	private void MoveRight()
 	{
-
+		_moveDirection = new Vector3(1,0,0);
 	}
-
 	private void MoveLeft()
 	{
-
+		_moveDirection = new Vector3(-1, 0, 0);
 	}
+	private void MoveDown()
+	{
+		_moveDirection = new Vector3(0, 0, -1);
+	}
+	private void MoveUp()
+	{
+		_moveDirection = new Vector3(0, 0, 1);
+	}
+
+
+	public void CheckRayCast()
+	{
+		Vector3 fromPosition = transform.position;
+		fromPosition.y = 1.0f;
+		Vector3 direction = new Vector3(100, 0, 0);
+
+		RaycastHit hit;
+		Debug.DrawRay(fromPosition, direction, Color.green);
+		if (Physics.Raycast(fromPosition, direction, out hit, layer))
+		{
+		//	Debug.DrawRay(fromPosition, direction, Color.yellow);
+			/*	if (Input.GetMouseButtonDown(0))
+				{
+					Rigidbody obj = Instantiate(projectile, shootPoint.transform.position, Quaternion.identity);
+					obj.velocity = vo;
+				}*/
+		}
+	}
+
+
 }

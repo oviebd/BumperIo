@@ -47,16 +47,10 @@ public class PlayerMovement : MonoBehaviour
 		{
 			if (_moveDirection != Vector3.zero)
 			{
-				
 				Quaternion rotation = Quaternion.LookRotation(_moveDirection, Vector3.up);
 				_rb.MoveRotation(rotation);
 				_prevRotation = rotation;
 			}
-
-			/*float angle = (Mathf.Atan2(_rotationMovement.x, _rotationMovement.y) * Mathf.Rad2Deg);
-			//angle = flipRot ? -angle : angle;
-			Quaternion rotation = Quaternion.Euler(0, angle, 0);
-			_rb.MoveRotation(rotation);*/
 		}
 		else
 		{

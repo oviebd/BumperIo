@@ -626,7 +626,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1034448162
 Transform:
   m_ObjectHideFlags: 0
@@ -668,8 +668,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95e717858fa35549beee0a160af445a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  layer:
+    serializedVersion: 2
+    m_Bits: 256
   _moveSpeed: 5
   _rotationSpeed: 5
+  _rb: {fileID: 0}
 --- !u!54 &1034448166
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1915,6 +1919,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2467043003279860565, guid: 058a63156b20ed64b9ad0395b37f635f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2467043003279860566, guid: 058a63156b20ed64b9ad0395b37f635f,
         type: 3}
